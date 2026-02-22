@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lava Rapido - Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema Lava Rapido</h1>
+            <div class="user-info">
+                <span>Ola, Admin</span>
+                <button onclick="window.location.href='/logout'" class="btn btn-sm btn-danger" style="margin-left: 1rem;">Sair</button>
+            </div>
+        </header>
+
+        <!-- METRICAS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-car"></i></div>
+                <div class="stat-info">
+                    <h3>Lavagens Hoje</h3>
+                    <p id="stat-lavagens-hoje">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-info">
+                    <h3>Total Registros</h3>
+                    <p id="stat-lavagens-total">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <div class="stat-info">
+                    <h3>Faturamento Hoje</h3>
+                    <p id="stat-faturamento-hoje">R$ 0.00</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                <div class="stat-info">
+                    <h3>Faturamento Total</h3>
+                    <p id="stat-faturamento-total">R$ 0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- FORMULARIO -->
+            <div class="card">
+                <h2>Registrar Nova Lavagem</h2>
+                <form id="form-lavagem">
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" id="cliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <select id="marca" required>
+                            <option value="">Selecione a Marca</option>
+                            <option>Chevrolet</option>
+                            <option>Volkswagen</option>
+                            <option>Fiat</option>
+                            <option>Ford</option>
+                            <option>Hyundai</option>
+                            <option>Toyota</option>
+                            <option>Honda</option>
+                            <option>Renault</option>
+                            <option>Jeep</option>
+                            <option>Nissan</option>
+                            <option>BMW</option>
+                            <option>Mercedes-Benz</option>
+                            <option>Audi</option>
+                            <option>Kia</option>
+                            <option>Peugeot</option>
+                            <option>Citroen</option>
+                            <option>Mitsubishi</option>
+                            <option>Volvo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input type="text" id="modelo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Placa</label>
+                        <input type="text" id="placa" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Lavagem</label>
+                        <select id="tipo_lavagem" required>
+                            <option value="Simples">Simples</option>
+                            <option value="Completa">Completa</option>
+                            <option value="Premium">Premium</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor (R$)</label>
+                        <input type="number" id="valor" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status Pagamento</label>
+                        <select id="status_pagamento">
+                            <option value="Pendente">Pendente</option>
+                            <option value="Pago">Pago</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Observacoes</label>
+                        <textarea id="observacoes" rows="2"></textarea>
+                    </div>
+                    <button type="button" onclick="registrarLavagem()" class="btn btn-primary">Registrar</button>
+                </form>
+            </div>
+
+            <!-- TABELA E GRAFICO -->
+            <div class="content-right">
+                <div class="card">
+                    <h2>Faturamento Diario</h2>
+                    <div class="chart-container">
+                        <canvas id="grafico-faturamento"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2>Lavagens Registradas</h2>
+                        <button onclick="window.location.href='/exportar'" class="btn btn-sm btn-primary" style="width: auto;">Exportar Excel</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Veiculo</th>
+                                    <th>Placa</th>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Acoes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-corpo">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
