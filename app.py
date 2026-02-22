@@ -10,22 +10,32 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "lava_rapido_secure_secret_2026")
 
 # ---------- CONFIGURACOES DO BANCO DE DADOS ----------
-DB_CONFIG = {
-    "host": "localhost",
-    "database": "lava_rapido_db", # Ajuste conforme o nome do seu banco
-    "user": "postgres",
-    "password": "dudu1522", # Ajuste conforme sua senha
-    "port": 5432
-}
+# Esta parte agora tenta pegar a URL do banco do Render. 
+# Se não encontrar (rodando local), usa suas configurações padrão.
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def get_db_connection():
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        conn.set_client_encoding("UTF8")
+        if DATABASE_URL:
+            # Conexão para o Render (Produção)
+            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        else:
+            # Conexão para seu computador (Local)
+            DB_CONFIG = {
+                "host": "localhost",
+                "database": "lava_rapido_db",
+                "user": "postgres",
+                "password": "your_password_here", # Sua senha local
+                "port": 5432
+            }
+            conn = psycopg2.connect(**DB_CONFIG)
+        
+        conn.set_client_encoding('UTF8')
         return conn
     except Exception as e:
         print(f"Erro de conexao com o banco: {e}")
         return None
+
 
 # ---------- DECORADOR DE AUTENTICACAO ----------
 def login_required(f):
