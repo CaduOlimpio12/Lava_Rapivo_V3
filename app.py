@@ -17,25 +17,43 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 def get_db_connection():
     try:
         if DATABASE_URL:
-            # Conexão para o Render (Produção)
             conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         else:
-            # Conexão para seu computador (Local)
             DB_CONFIG = {
                 "host": "localhost",
                 "database": "lava_rapido_db",
                 "user": "postgres",
-                "password": "your_password_here", # Sua senha local
+                "password": "sua_senha_aqui",
                 "port": 5432
             }
             conn = psycopg2.connect(**DB_CONFIG)
         
         conn.set_client_encoding('UTF8')
+        
+        # --- TRECHO NOVO: CRIA A TABELA AUTOMATICAMENTE SE NÃO EXISTIR ---
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS lavagens (
+                id SERIAL PRIMARY KEY,
+                cliente VARCHAR(255) NOT NULL,
+                marca VARCHAR(100),
+                modelo VARCHAR(100),
+                placa VARCHAR(20),
+                tipo_lavagem VARCHAR(50),
+                valor DECIMAL(10, 2),
+                status_pagamento VARCHAR(20) DEFAULT 'Pendente',
+                observacoes TEXT,
+                data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        conn.commit()
+        cursor.close()
+        # -------------------------------------------------------------
+        
         return conn
     except Exception as e:
         print(f"Erro de conexao com o banco: {e}")
         return None
-
 
 # ---------- DECORADOR DE AUTENTICACAO ----------
 def login_required(f):
