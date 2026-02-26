@@ -99,6 +99,9 @@ def registrar_lavagem():
         return jsonify({"erro": "Falha na conexao com o banco"}), 500
     try:
         cursor = conn.cursor()
+
+        cursor.execute("SET TIMEZONE TO 'America/Sao_Paulo';") # Ou o fuso horário desejado
+
         query = """
         INSERT INTO lavagens (cliente, marca, modelo, placa, tipo_lavagem,
         valor, status_pagamento, observacoes)
