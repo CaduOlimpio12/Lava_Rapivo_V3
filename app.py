@@ -4,6 +4,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import pandas as pd
+import openpyxl
 from functools import wraps
 
 app = Flask(__name__)
